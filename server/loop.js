@@ -13,6 +13,8 @@ export default new (function() {
   let serverSocket;
 
   const createLoginSocket = () => {
+    logger.debug(`Login server`, `Connect`, config.get("server.login.host"), config.get("server.login.port"))
+
     serverState.updateLoginPending(true)
 
     loginSocket = new net.Socket();
@@ -24,27 +26,36 @@ export default new (function() {
       })
 
     loginSocket.on("error", (err) => {
+      logger.debug(`Login server`, `Error`, err.code, err.message)
+
       serverState.updateLoginErrorCode(err.code)
     })
 
     loginSocket.on("end", () => {
+      logger.debug(`Login server`, `End`)
+
       serverState.updateLoginPending(false)
       serverState.updateLoginErrorCode(null)
       serverState.updateLoginStatus(false)
     })
 
     loginSocket.on("close", (hadError) => {
+      logger.debug(`Login server`, `Close` + (hadError ? ` by error` : ``))
+
       if (!hadError)
         serverState.updateLoginErrorCode(null)
 
       serverState.updateLoginPending(false)
       serverState.updateLoginStatus(false)
 
+      logger.debug(`Login server`, `Try reconnect after 15s.`)
       setTimeout(createLoginSocket, 15000)
     })
   }
 
   const createServerSocket = () => {
+    logger.debug(`Gate server`, `Connect`, config.get("server.server.host"), config.get("server.server.port"))
+
     serverState.updateServerPending(true)
 
     serverSocket = new net.Socket();
@@ -56,22 +67,29 @@ export default new (function() {
       })
 
     serverSocket.on("error", (err) => {
+      logger.debug(`Gate server`, `Error`, err.code, err.message)
+
       serverState.updateServerErrorCode(err.code)
     })
 
     serverSocket.on("end", () => {
+      logger.debug(`Gate server`, `End`)
+
       serverState.updateServerPending(false)
       serverState.updateServerErrorCode(null)
       serverState.updateServerStatus(false)
     })
 
     serverSocket.on("close", (hadError) => {
+      logger.debug(`Gate server`, `Close` + (hadError ? ` by error` : ``))
+
       if (!hadError)
         serverState.updateServerErrorCode(null)
 
       serverState.updateServerPending(false)
       serverState.updateServerStatus(false)
 
+      logger.debug(`Gate server`, `Try reconnect after 15s.`)
       setTimeout(createServerSocket, 15000)
     })
   }
