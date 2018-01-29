@@ -10,6 +10,7 @@ import logger from './utils/logger'
 
 export default new (function() {
   let loginSocket;
+  let serverSocket;
 
   const createLoginSocket = () => {
     serverState.updateLoginPending(true)
@@ -46,25 +47,25 @@ export default new (function() {
   const createServerSocket = () => {
     serverState.updateServerPending(true)
 
-    loginSocket = new net.Socket();
+    serverSocket = new net.Socket();
 
-    loginSocket.connect(config.get("server.server.port"),
+    serverSocket.connect(config.get("server.server.port"),
       config.get("server.server.host"), () => {
         serverState.updateServerPending(false)
         serverState.updateServerStatus(true)
       })
 
-    loginSocket.on("error", (err) => {
+    serverSocket.on("error", (err) => {
       serverState.updateServerErrorCode(err.code)
     })
 
-    loginSocket.on("end", () => {
+    serverSocket.on("end", () => {
       serverState.updateServerPending(false)
       serverState.updateServerErrorCode(null)
       serverState.updateServerStatus(false)
     })
 
-    loginSocket.on("close", (hadError) => {
+    serverSocket.on("close", (hadError) => {
       if (!hadError)
         serverState.updateServerErrorCode(null)
 
