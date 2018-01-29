@@ -21,6 +21,8 @@ export default new (function() {
 
     loginSocket.connect(config.get("server.login.port"),
       config.get("server.login.host"), () => {
+        logger.debug(`Login server`, `Connected`)
+
         serverState.updateLoginPending(false)
         serverState.updateLoginStatus(true)
       })
@@ -62,6 +64,8 @@ export default new (function() {
 
     serverSocket.connect(config.get("server.server.port"),
       config.get("server.server.host"), () => {
+        logger.debug(`Gate server`, `Connected`)
+        
         serverState.updateServerPending(false)
         serverState.updateServerStatus(true)
       })
