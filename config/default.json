@@ -1,0 +1,20 @@
+// rename production.json.dot to production.json
+// and update the settings there
+{
+  "server": {
+    "port": 8092,
+    "host": "127.0.0.1",
+    "login": {
+      "port": 10001,
+      "host": "127.0.0.1"
+    },
+    "server": {
+      "port": 27780,
+      "host": "127.0.0.1",
+      "displayPath": "C:/Src/RFO/SystemSave/ServerDisplay.ini"
+    }
+  },
+  "logger": {
+    "level": "trace"
+  }
+}
