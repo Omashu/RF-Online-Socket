@@ -36,9 +36,6 @@ export const updateLoginErrorCode = (value) => {
   update({loginErrorCode: value})
 }
 
-
-
-
 export const updateServerPending = (value) => {
   update({serverPending: !!value})
 }
@@ -51,14 +48,16 @@ export const updateServerErrorCode = (value) => {
   update({serverErrorCode: value})
 }
 
-
-
-
 export const updatePlayers = (value) => {
   update({players: {...value}})
 }
 
+export const current = () => {
+  return {...serverState}
+}
+
 export default {
+  current,
   update,
   updatePlayers,
   updateServerStatus,
